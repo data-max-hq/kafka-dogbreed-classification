@@ -14,6 +14,3 @@ requirements:
 mac:
 	docker pull emacski/tensorflow-serving:latest-linux_arm64
 	docker run -t --rm -p 8501:8501 --mount type=bind,source=/Users/endriveizaj/Documents/Test-Kafka/models/dog_model/,target=/models/dog_model/ -e MODEL_NAME=dog_model emacski/tensorflow-serving:latest-linux_arm64
-
-	docker pull emacski/tensorflow-serving:latest-linux_arm64
-	docker run -t --rm -p 8501:8501 --mount type=bind,source=/Users/endriveizaj/Documents/Test-Kafka/models/dog_model/,target=/models/dog_model/ -e MODEL_NAME=dog_model emacski/tensorflow-serving:latest-linux_arm64
