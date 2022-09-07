@@ -1,0 +1,20 @@
+version: "3.9"
+
+services:
+  seldon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./models:/models
+
+  tfserve:
+    image: tensorflow/serving
+    ports:
+      - 8501:8501
+    environment:
+      MODEL_NAME: dog_model
+    volumes:
+      - ./models/dog_model:/models/dog_model
