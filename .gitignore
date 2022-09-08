@@ -2,3 +2,5 @@ venv/
 foo.png
 models/
 dogImages/
+.DS_Store
+diagrams/.DS_Store
