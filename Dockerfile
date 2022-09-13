@@ -1,5 +1,4 @@
-FROM python:3.8
-
+FROM kumatea/tensorflow:2.6.0
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive && \
     apt-get install -y curl python3-setuptools && \

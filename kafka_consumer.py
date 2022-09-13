@@ -56,7 +56,6 @@ def predict_tfserve(image):
     data = json.dumps({ "signature_name": "serving_default","instances": image.tolist(),})
     headers = {"Content-Type": "application/json"}
     response = requests.post(url, data=data, headers=headers)
-    print(response.text)
     prediction = json.loads(response.text)["predictions"]
     pred = tf.argmax(prediction, axis=1)    
 
@@ -84,7 +83,6 @@ def consumer():
             print("Tensorflow")
             result = predict_tfserve(image)
         elif config=="SELDON":
-            print("SELDON")
             result = predict_seldon(image)
         send_photo_to_slack(result)
 
