@@ -5,6 +5,8 @@ import pickle
 import os
 import logging
 import pickle
+import wget
+import zipfile
 
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 
@@ -93,10 +95,7 @@ def train():
 
 if __name__ == "__main__":
 
-    os.system(
-        "wget https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip"
-    )
-    os.system("unzip -qo dogImages.zip")
-    os.system("rm dogImages.zip")
-    logging.info("Test")
+    wget.download("https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip")
+    with zipfile.ZipFile("dogImages.zip" ,'r') as zip_ref:
+        zip_ref.extractall("")
     train()

@@ -4,3 +4,4 @@ spicy
 slack_sdk
 numpy
 pillow
+wget
