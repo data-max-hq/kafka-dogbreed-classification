@@ -13,16 +13,20 @@ import os
 
 logging.basicConfig(level=logging.INFO)
 config = os.getenv("CONFIG", "SELDON")
+slack_bot_auth_token = os.getenv("SLACK_BOT_TOKEN")
+slack_channel_id = os.getenv("SLACK_CHANNEL_ID")
+
 
 def send_photo_to_slack(result):
     image = open("foo.png", 'rb').read()
-    client = WebClient("Slack_Bot_User_OAuth_Token") #input OAuth token
+    client = WebClient(slack_bot_auth_token) #input OAuth token
     client.files_upload(
-        channels = "Slack_channel_id", #input channel id
-        initial_comment = f"{result}",
-        filename = "dog photo",
-        content = image
+        channels=slack_channel_id, #input channel id
+        initial_comment=f"{result}",
+        filename="dog photo",
+        content=image
     )
+
 
 def send_client_request(seldon_client, image):
     client_prediction = seldon_client.predict(
@@ -31,7 +35,6 @@ def send_client_request(seldon_client, image):
         payload_type="ndarray"
     )
     return client_prediction
-
 
 
 def predict_seldon(image):
@@ -51,9 +54,10 @@ def predict_seldon(image):
     result = label.split(".")[-1].replace("_", " ")
     return result
 
+
 def predict_tfserve(image):
     url = "http://localhost:8501/v1/models/dog_model:predict"
-    data = json.dumps({ "signature_name": "serving_default","instances": image.tolist(),})
+    data = json.dumps({"signature_name": "serving_default", "instances": image.tolist(), })
     headers = {"Content-Type": "application/json"}
     response = requests.post(url, data=data, headers=headers)
     print(response.text)
@@ -72,7 +76,7 @@ def predict_tfserve(image):
 def consumer():
     consumer = KafkaConsumer('dogtopic')
     for message in consumer:
-        with open("foo.png","wb") as f:
+        with open("foo.png", "wb") as f:
             f.write(decodebytes(message.value))
         img = tf.keras.utils.load_img(
             "foo.png",
@@ -80,14 +84,13 @@ def consumer():
         )
         input_arr = tf.keras.utils.img_to_array(img)
         image = input_arr[None, ...]
-        if config=="TENSORFLOW":
+        if config == "TENSORFLOW":
             print("Tensorflow")
             result = predict_tfserve(image)
-        elif config=="SELDON":
+        elif config == "SELDON":
             print("SELDON")
             result = predict_seldon(image)
         send_photo_to_slack(result)
-
 
 
 if __name__ == "__main__":
